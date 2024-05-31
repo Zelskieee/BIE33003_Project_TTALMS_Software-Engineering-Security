@@ -78,7 +78,7 @@ header('location:reg-students.php');
                     <!-- Advanced Tables -->
                     <div class="panel panel-primary" style="border-color: #9B00EA;">
                         <div class="panel-heading" style="text-align: center; background-color: #9B00EA;">
-                          List of Students
+                        <i class="fa-solid fa-graduation-cap"></i> List of Students
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">

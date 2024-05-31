@@ -5,9 +5,6 @@ include('includes/config.php');
 if (strlen($_SESSION['login']) == 0) {
     header('location:index.php');
 } else {
-
-
-
 ?>
     <!DOCTYPE html>
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -54,13 +51,12 @@ if (strlen($_SESSION['login']) == 0) {
                         <h4 class="header-line" style="text-align: center; position: relative;"><i class="fa-solid fa-book-bookmark fa-beat"></i> BORROWED BOOKS</h4>
                     </div>
 
-
                     <div class="row">
                         <div class="col-md-12">
                             <!-- Advanced Tables -->
                             <div class="panel panel-default">
                                 <div class="panel-heading" style="text-align: center;">
-                                    Borrowed Books
+                                <i class="fa-solid fa-book-bookmark"></i> Borrowed Books
                                 </div>
                                 <div class="panel-body">
                                     <div class="table-responsive">
@@ -86,23 +82,40 @@ if (strlen($_SESSION['login']) == 0) {
                                                 $results = $query->fetchAll(PDO::FETCH_OBJ);
                                                 $cnt = 1;
                                                 if ($query->rowCount() > 0) {
-                                                    foreach ($results as $result) {               ?>
+                                                    foreach ($results as $result) { ?>
                                                         <tr class="odd gradeX">
-                                                            <td class="center"><?php echo htmlentities($cnt); ?></td>
+                                                            <td class="center" style="text-align: center;"><?php echo htmlentities($cnt); ?></td>
                                                             <td class="center"><?php echo htmlentities($result->BookName); ?></td>
-                                                            <td class="center"><?php echo htmlentities($result->ISBNNumber); ?></td>
-                                                            <td class="center"><?php echo htmlentities($result->IssuesDate); ?></td>
-                                                            <td class="center"><?php if ($result->ReturnDate == "") { ?>
-                                                                    <span style="color:red">
-                                                                        <?php echo htmlentities("Not Return Yet"); ?>
-                                                                    </span>
-                                                                <?php } else {
-                                                                                    echo htmlentities($result->ReturnDate);
-                                                                                }
+                                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->ISBNNumber); ?></td>
+                                                            <td class="center" style="text-align: center;">
+                                                                <?php 
+                                                                    $date = new DateTime($result->IssuesDate);
+                                                                    echo $date->format('d/m/Y g:i A'); 
                                                                 ?>
                                                             </td>
-                                                            <td class="center"><?php echo htmlentities($result->fine); ?></td>
-
+                                                            <td class="center" style="text-align: center;">
+                                                                <?php if ($result->ReturnDate == "") { ?>
+                                                                    <span style="color: red; font-weight: bold;">
+                                                                        <?php echo htmlentities("Not Return Yet"); ?>
+                                                                    </span>
+                                                                <?php } else { 
+                                                                    $date = new DateTime($result->ReturnDate);
+                                                                    echo htmlentities($date->format('d/m/Y g:i A'));
+                                                                } ?>
+                                                            </td>
+                                                            <td class="center" style="text-align: center;">
+                                                                <?php
+                                                                if ($result->ReturnDate == "") {
+                                                                    echo '';
+                                                                } else {
+                                                                    if ($result->fine == 0) {
+                                                                        echo '<span style="color: green; font-weight: bold;">No fine</span>';
+                                                                    } else {
+                                                                        echo '<span style="color: red; font-weight: bold;">' . number_format($result->fine, 2) . '</span>';
+                                                                    }
+                                                                }
+                                                                ?>
+                                                            </td>
                                                         </tr>
                                                 <?php $cnt = $cnt + 1;
                                                     }

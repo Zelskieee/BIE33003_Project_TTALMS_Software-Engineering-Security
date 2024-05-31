@@ -110,20 +110,43 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {               ?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
-                                            <td class="center"><?php echo htmlentities($result->matricNo);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($cnt);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->matricNo);?></td>
                                             <td class="center"><?php echo htmlentities($result->FullName);?></td>
                                             <td class="center"><?php echo htmlentities($result->BookName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->IssuesDate);?></td>
-                                            <td class="center"><?php if($result->ReturnDate==''): echo "Not returned yet";
-                                            else: echo htmlentities($result->ReturnDate); endif;?></td>
-                                             <td class="center"><?php if($result->ReturnDate==''): echo "Not returned yet";
-                                              else: echo $result->fine; endif;
-                                             ?></td>
-                                            
-                            
+                                            <td class="center" style="text-align: center;">
+                                                <?php 
+                                                if (!empty($result->IssuesDate)) {
+                                                    echo date('d/m/Y h:i A', strtotime($result->IssuesDate));
+                                                } else {
+                                                    echo "&nbsp;"; // Display a non-breaking space if the date is empty
+                                                }
+                                                ?>
+                                            </td>
+                                            <td class="center" style="text-align: center;">
+                                                <?php 
+                                                if (empty($result->ReturnDate)) {
+                                                    echo '<span style="color: red; font-weight: bold;">Not returned yet</span>';
+                                                } else {
+                                                    echo date('d/m/Y h:i A', strtotime($result->ReturnDate));
+                                                }
+                                                ?>
+                                            </td>
+                                            <td class="center" style="text-align: center;">
+                                                <?php 
+                                                if (!empty($result->ReturnDate)) {
+                                                    if ($result->fine == 0) {
+                                                        echo '<span style="color: green; font-weight: bold;">No fine</span>';
+                                                    } else {
+                                                        echo '<span style="color: red; font-weight: bold;">' . number_format($result->fine, 2) . '</span>';
+                                                    }
+                                                } else {
+                                                    echo '&nbsp;'; // Leave blank if the book is not returned yet
+                                                }
+                                                ?>
+                                            </td>
                                         </tr>
- <?php $cnt=$cnt+1;}} ?>                                      
+                                        <?php $cnt=$cnt+1;}} ?>                                      
                                     </tbody>
                                 </table>
                             </div>

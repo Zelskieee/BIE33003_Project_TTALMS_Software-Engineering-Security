@@ -10,38 +10,33 @@ if (strlen($_SESSION['login']) == 0) {
         $sid = $_SESSION['login'];
         $fname = $_POST['fullanme'];
         $mobileno = $_POST['mobileno'];
-        $image_name = '';
 
-        // Check if an image is selected for upload
-        if (!empty($_FILES["image"]["tmp_name"])) {
-            $image_file = $_FILES["image"];
-            $image_extension = pathinfo($image_file["name"], PATHINFO_EXTENSION);
-            $image_name = bin2hex(random_bytes(16)) . '.' . $image_extension;
-            $target_path = "assets/img/student_profile_img/" . $image_name;
-
-            // Move the temp image file to the destination directory
-            if (!move_uploaded_file($image_file["tmp_name"], $target_path)) {
-                die('Failed to move uploaded file to destination.');
-            }
+        // Validate inputs for any HTML tags
+        if (preg_match('/<[^<]+>/', $fname) || preg_match('/<[^<]+>/', $mobileno)) {
+            echo '<script>alert("HTML tags are not allowed in inputs."); window.location.href="my-profile.php";</script>';
+            exit();
         }
+
+        // Validate mobile number
+        if (!preg_match('/^[0-9]{10}$/', $mobileno)) {
+            echo '<script>alert("Invalid mobile number format."); window.location.href="my-profile.php";</script>';
+            exit();
+        }
+
+        // Sanitize inputs
+        $fname = htmlspecialchars($fname, ENT_QUOTES, 'UTF-8');
+        $mobileno = htmlspecialchars($mobileno, ENT_QUOTES, 'UTF-8');
 
         try {
             // Update the database
-            $sql = "UPDATE students SET FullName=:fname, MobileNumber=:mobileno";
-            if (!empty($image_name)) {
-                $sql .= ", profile_picture=:image";
-            }
-            $sql .= " WHERE matricNo=:sid";
+            $sql = "UPDATE students SET FullName=:fname, MobileNumber=:mobileno WHERE matricNo=:sid";
             $query = $dbh->prepare($sql);
             $query->bindParam(':sid', $sid, PDO::PARAM_STR);
             $query->bindParam(':fname', $fname, PDO::PARAM_STR);
             $query->bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
-            if (!empty($image_name)) {
-                $query->bindParam(':image', $image_name, PDO::PARAM_STR);
-            }
             $query->execute();
 
-            echo '<script>alert("Your profile has been updated")</script>';
+            echo '<script>alert("Your profile has been updated"); window.location.href="my-profile.php";</script>';
         } catch (PDOException $e) {
             die("Error: " . $e->getMessage());
         }
@@ -185,7 +180,7 @@ if (strlen($_SESSION['login']) == 0) {
 
                                             <div class="form-group">
                                                 <i class="fa fa-phone" style="margin-right: 5px;"></i><label> Mobile Number</label>
-                                                <input class="form-control" type="text" name="mobileno" maxlength="10" value="<?php echo htmlentities($result->MobileNumber); ?>" autocomplete="off" required />
+                                                <input class="form-control" type="text" name="mobileno" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,11)" value="<?php echo htmlentities($result->MobileNumber); ?>" autocomplete="off" required />
                                             </div>
 
                                             <div class="form-group">

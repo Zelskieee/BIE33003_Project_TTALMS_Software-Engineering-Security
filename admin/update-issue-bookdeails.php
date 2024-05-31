@@ -9,7 +9,7 @@ if (strlen($_SESSION['alogin']) == 0) {
   if (isset($_POST['return'])) {
     $rid = intval($_GET['rid']);
     $fine = $_POST['fine'];
-    if (is_numeric($fine) == 1) {
+    if (is_numeric($fine)) {
       $rstatus = 1;
       $bookid = $_POST['bookid'];
       $sql = "update issuedbookdetails set fine=:fine,RetrunStatus=:rstatus where id=:rid;
@@ -49,37 +49,6 @@ if (strlen($_SESSION['alogin']) == 0) {
     <!-- ICON -->
     <script src="https://kit.fontawesome.com/641ebcf430.js" crossorigin="anonymous"></script> 
 
-    <script>
-      // function for get student name
-      function getstudent() {
-        $("#loaderIcon").show();
-        jQuery.ajax({
-          url: "get_student.php",
-          data: 'studentid=' + $("#studentid").val(),
-          type: "POST",
-          success: function(data) {
-            $("#get_student_name").html(data);
-            $("#loaderIcon").hide();
-          },
-          error: function() {}
-        });
-      }
-
-      //function for book details
-      function getbook() {
-        $("#loaderIcon").show();
-        jQuery.ajax({
-          url: "get_book.php",
-          data: 'bookid=' + $("#bookid").val(),
-          type: "POST",
-          success: function(data) {
-            $("#get_book_name").html(data);
-            $("#loaderIcon").hide();
-          },
-          error: function() {}
-        });
-      }
-    </script>
     <style type="text/css">
       .others {
         color: red;
@@ -102,7 +71,6 @@ if (strlen($_SESSION['alogin']) == 0) {
         transition: all 0.5s ease;
       }
 
-      /* Define the styles for hover effect */
       input[type="submit"]:hover {
         letter-spacing: 3px;
         background-color: #9B00EA;
@@ -110,7 +78,6 @@ if (strlen($_SESSION['alogin']) == 0) {
         box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
       }
 
-      /* Define the styles for active effect */
       input[type="submit"]:active {
         letter-spacing: 3px;
         background-color: #9B00EA;
@@ -153,10 +120,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                   $results = $query->fetchAll(PDO::FETCH_OBJ);
                   $cnt = 1;
                   if ($query->rowCount() > 0) {
-                    foreach ($results as $result) {               ?>
-
-
-
+                    foreach ($results as $result) { 
+                  ?>
                       <input type="hidden" name="bookid" value="<?php echo htmlentities($result->bid); ?>">
                       <h4 style="text-align: center; font-weight: bold;"><i class="fa-solid fa-graduation-cap"></i> Student Details</h4>
                       <hr />
@@ -188,8 +153,6 @@ if (strlen($_SESSION['alogin']) == 0) {
                         </div>
                       </div>
 
-
-
                       <h4 style="text-align: center; font-weight: bold;"><i class="fa-solid fa-book-open"></i> Book Details</h4>
                       <hr />
 
@@ -199,7 +162,6 @@ if (strlen($_SESSION['alogin']) == 0) {
                           <img src="bookimage/<?php echo htmlentities($result->bookImage); ?>" width="120">
                         </div>
                       </div>
-
 
                       <div class="col-md-6">
                         <div class="form-group">
@@ -225,10 +187,8 @@ if (strlen($_SESSION['alogin']) == 0) {
                         <div class="form-group">
                           <label>Book Returned Date :</label>
                           <?php if ($result->ReturnDate == "") {
-                            echo htmlentities("Not Return Yet");
+                            echo htmlentities("Not Returned Yet");
                           } else {
-
-
                             echo htmlentities($result->ReturnDate);
                           }
                           ?>
@@ -239,32 +199,32 @@ if (strlen($_SESSION['alogin']) == 0) {
                         <div class="form-group">
                           <label>Fine (RM) :</label>
                           <?php
-                          if ($result->fine == "") { ?>
-                            <input class="form-control" type="text" name="fine" id="fine" required />
-
+                          if ($result->ReturnDate == "") { ?>
+                            <input class="form-control" type="text" name="fine" id="fine" required autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" />
                           <?php } else {
-                            echo htmlentities($result->fine);
+                            if ($result->fine == 0) {
+                              echo '<span style="color: green; font-weight: bold;">No fine</span>';
+                            } else {
+                              echo '<span style="color: red; font-weight: bold;">' . number_format($result->fine, 2) . '</span>';
+                            }
                           }
                           ?>
                         </div>
                       </div>
                       <?php if ($result->RetrunStatus == 0) { ?>
-
                         <input type="submit" name="return" class="btn btn-primary" value="Return Book">
-
-              </div>
-
-        <?php }
+                      <?php } ?>
+                  <?php 
                     }
-                  } ?>
-        </form>
+                  } 
+                  ?>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->
     <?php include('includes/footer.php'); ?>

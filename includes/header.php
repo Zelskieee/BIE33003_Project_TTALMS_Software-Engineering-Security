@@ -1,6 +1,12 @@
 <head>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-Bs8ZLHIjN63vpyw+laFJ9G4aPDRhzGGPPePlWb8HzFgyTj59FgB9cAP6ImFdQ8WjRsjcjBTD5+xboRqTYwqmJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://kit.fontawesome.com/641ebcf430.js" crossorigin="anonymous"></script>
+
+    <style>
+    a:focus {
+    background-color: #9B00EA;
+}
+</style>
 </head>
 
 <div class="navbar navbar-inverse set-radius-zero" style="background-color: white; border-color: white;">
@@ -46,8 +52,8 @@
                             <li>
                                 <a href="#" class="dropdown-toggle" id="ddlmenuItem" data-toggle="dropdown" style="transition: all 0.3s ease; border-radius: 5px; color: black;" onmouseover="this.style.borderRadius='5px'; this.style.backgroundColor='#ccc'" onmouseout="this.style.backgroundColor='transparent'"> Account <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="my-profile.php"> My Profile</a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="change-password.php"> Change Password</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="my-profile.php" style="outline: none;" onfocus="this.style.backgroundColor='#9B00EA'" onblur="this.style.backgroundColor=''"> My Profile</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="change-password.php" style="outline: none;" onfocus="this.style.backgroundColor='#9B00EA'" onblur="this.style.backgroundColor=''"> Change Password</a></li>
                                 </ul>
                             </li>
 

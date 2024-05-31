@@ -88,7 +88,7 @@ else{
                     <!-- Advanced Tables -->
                     <div class="panel panel-primary" style="border-color: #9B00EA;">
                         <div class="panel-heading" style="text-align: center; background-color: #9B00EA;">
-                          List of Borrowed Books 
+                        <i class="fa-solid fa-book-bookmark"></i> List of Borrowed Books 
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -115,27 +115,38 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {               ?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($cnt);?></td>
                                             <td class="center"><?php echo htmlentities($result->FullName);?></td>
                                             <td class="center"><?php echo htmlentities($result->BookName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->ISBNNumber);?></td>
-                                            <td class="center"><?php echo htmlentities($result->IssuesDate);?></td>
-                                            <td class="center"><?php if($result->ReturnDate=="")
-                                            {
-                                                echo htmlentities("Not Return Yet");
-                                            } else {
-
-
-                                            echo htmlentities($result->ReturnDate);
-}
-                                            ?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->ISBNNumber);?></td>
                                             <td class="center" style="text-align: center;">
-
-                                            <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary" style="background-color: black;"><i class="fa-solid fa-file-pen fa-bounce"></i> Update</button> 
-                                         
+                                                <?php 
+                                                if (!empty($result->IssuesDate)) {
+                                                    echo date('d/m/Y h:i A', strtotime($result->IssuesDate));
+                                                } else {
+                                                    echo "&nbsp;"; // Display a non-breaking space if the date is empty
+                                                }
+                                                ?>
                                             </td>
+                                            <td class="center" style="text-align: center;">
+                                                <?php 
+                                                if (!empty($result->ReturnDate)) {
+                                                    echo date('d/m/Y h:i A', strtotime($result->ReturnDate));
+                                                } else {
+                                                    echo '<span style="color: red; font-weight: bold;">Not Return Yet</span>';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td class="center" style="text-align: center;">
+                                                <?php if (!empty($result->ReturnDate)) { ?>
+                                                    <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary" style="background-color: white; border-color: black; color: black;"><i class="fa-solid fa-eye fa-bounce"></i> View</button></a>
+                                                <?php } else { ?>
+                                                    <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary" style="background-color: black;"><i class="fa-solid fa-arrow-rotate-left fa-bounce"></i> Return</button></a>
+                                                <?php } ?>
+                                            </td>
+
                                         </tr>
- <?php $cnt=$cnt+1;}} ?>                                      
+                                        <?php $cnt=$cnt+1;}} ?>                                      
                                     </tbody>
                                 </table>
                             </div>

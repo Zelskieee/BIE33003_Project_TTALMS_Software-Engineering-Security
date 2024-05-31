@@ -29,7 +29,7 @@ if (strlen($_SESSION['login']) == 0) {
         <link href="assets/css/style.css" rel="stylesheet" />
         <!-- GOOGLE FONT -->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://kit.fontawesome.com/641ebcf430.js" crossorigin="anonymous"></script>
 
         <style>
             .book-container {
@@ -60,7 +60,7 @@ if (strlen($_SESSION['login']) == 0) {
                 <?php include('includes/check_verification.php'); ?>
                 <div class="row pad-botm">
                     <div class="col-md-12">
-                        <h4 class="header-line" style="text-align: center; position: relative;"><i style="position: absolute; left: 43%; top: 20%; transform: translate(-50%, -50%); margin-right: 5px;" class="fa fa-book"></i> LIST OF BOOK</h4>
+                        <h4 class="header-line" style="text-align: center; position: relative;"><i class="fa-solid fa-book fa-beat"></i> LIST OF BOOK</h4>
                     </div>
 
 
@@ -93,9 +93,15 @@ if (strlen($_SESSION['login']) == 0) {
                                                 <?php echo htmlentities($result->ISBNNumber); ?>
                                                 <br>
                                                 <?php if ($result->isIssued == '1') : ?>
-                                                    <p style="color:red;">BOOK BORROWED</p>
+                                                    <p style="color:red; font-weight: bold;">BOOK BORROWED</p>
                                                 <?php else : ?>
-                                                    <a href="borrow-book.php?bookid=<?php echo htmlentities($result->bookid); ?>" class="btn btn-primary" style="background-color: #9B00EA; border-color: #9B00EA;">Borrow Book</a>
+                                                    <a href="borrow-book.php?bookid=<?php echo htmlentities($result->bookid); ?>" 
+                                                    class="btn btn-primary" 
+                                                    style="background-color: #9B00EA; color: white; border-color: #9B00EA; transition: background-color 0.5s ease, color 0.5s ease;" 
+                                                    onmouseover="this.style.backgroundColor='white'; this.style.color='#9B00EA';" 
+                                                    onmouseout="this.style.backgroundColor='#9B00EA'; this.style.color='white';">
+                                                    <i class="fa-solid fa-book-bookmark fa-bounce"></i> Borrow Book
+                                                    </a>
                                                 <?php endif; ?>
                                             </div>
 

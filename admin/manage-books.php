@@ -51,7 +51,7 @@ try {
                 <div class="container">
                     <div class="row pad-botm">
                         <div class="col-md-12">
-                            <h4 class="header-line" style="text-align: center; position: relative;"><i class="fa-solid fa-book"></i> MANAGE BOOK</h4>
+                            <h4 class="header-line" style="text-align: center; position: relative;"><i class="fa-solid fa-book fa-beat"></i> MANAGE BOOK</h4>
                         </div>
 
 
@@ -62,7 +62,7 @@ try {
                             <!-- Advanced Tables -->
                             <div class="panel panel-primary" style="border-color: #9B00EA;">
                                 <div class="panel-heading" style="text-align: center; background-color: #9B00EA;">
-                                    List of Books
+                                <i class="fa-solid fa-book"></i> List of Books
                                 </div>
                                 <div class="panel-body">
                                     <div class="table-responsive">
@@ -87,15 +87,15 @@ try {
                                                 if ($query->rowCount() > 0) {
                                                     foreach ($results as $result) {               ?>
                                                         <tr class="odd gradeX">
-                                                            <td class="center"><?php echo htmlentities($cnt); ?></td>
+                                                            <td class="center" style="text-align: center;"><?php echo htmlentities($cnt); ?></td>
                                                             <td class="center" width="300" style="text-align: center;">
                                                                 <img src="bookimage/<?php echo $result->bookImage; ?>" width="100">
                                                                 <br /><b><?php echo htmlentities($result->BookName); ?></b>
                                                             </td>
-                                                            <td class="center"><?php echo htmlentities($result->CategoryName); ?></td>
-                                                            <td class="center"><?php echo htmlentities($result->AuthorName); ?></td>
-                                                            <td class="center"><?php echo htmlentities($result->ISBNNumber); ?></td>
-                                                            <td class="center"><?php echo htmlentities($result->BookPrice); ?></td>
+                                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->CategoryName); ?></td>
+                                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->AuthorName); ?></td>
+                                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->ISBNNumber); ?></td>
+                                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->BookPrice); ?></td>
                                                             <td class="center" style="text-align: center;">
 
                                                                 <a href="edit-book.php?bookid=<?php echo htmlentities($result->bookid); ?>"><button class="btn btn-primary" style="background-color: black;"><i class="fa-solid fa-file-pen fa-bounce"></i> Edit</button>

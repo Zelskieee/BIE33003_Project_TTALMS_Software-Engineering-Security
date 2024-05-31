@@ -108,7 +108,7 @@ header('location:manage-categories.php');
                     <!-- Advanced Tables -->
                     <div class="panel panel-primary" style="border-color: #9B00EA;">
                         <div class="panel-heading" style="text-align: center; background-color: #9B00EA;">
-                           List of Categories
+                        <i class="fa-solid fa-table-list"></i> List of Categories
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -134,15 +134,23 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {               ?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($cnt);?></td>
                                             <td class="center"><?php echo htmlentities($result->CategoryName);?></td>
                                             <td class="center" style="text-align: center;"><?php if($result->Status==1) {?>
-                                            <a href="#" class="btn btn-success btn-xs">Active</a>
+                                            <a href="#" class="btn btn-success btn-xs" style="text-align: center;">Active</a>
                                             <?php } else {?>
-                                            <a href="#" class="btn btn-danger btn-xs">Inactive</a>
+                                            <a href="#" class="btn btn-danger btn-xs" style="text-align: center;">Inactive</a>
                                             <?php } ?></td>
-                                            <td class="center"><?php echo htmlentities($result->CreationDate);?></td>
-                                            <td class="center"><?php echo htmlentities($result->UpdationDate);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo date('d/m/Y h:i A', strtotime($result->CreationDate));?></td>
+                                            <td class="center" style="text-align: center;">
+                                                <?php 
+                                                if (!empty($result->UpdationDate)) {
+                                                    echo date('d/m/Y h:i A', strtotime($result->UpdationDate));
+                                                } else {
+                                                    echo "&nbsp;"; // Display a non-breaking space if the date is empty
+                                                }
+                                                ?>
+                                            </td>
                                             <td class="center" style="text-align: center;">
 
                                             <a href="edit-category.php?catid=<?php echo htmlentities($result->id);?>"><button class="btn btn-primary" style="background-color: black;"><i class="fa-solid fa-file-pen fa-bounce"></i> Edit</button> 

@@ -38,7 +38,7 @@ if (isset($_GET['bookid']) && isset($_SESSION['login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>TTALMS - Resend OTP</title>
+    <title>TTALMS - Student Borrow Book</title>
     <link rel="icon" type="image/x-icon" href="assets\img\icon_ttalms.ico">
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
@@ -49,8 +49,47 @@ if (isset($_GET['bookid']) && isset($_SESSION['login'])) {
     <!-- GOOGLE FONT -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <!-- ICON -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/641ebcf430.js" crossorigin="anonymous"></script>
+    <style>
+         input[type="submit"] {
+            padding: 17px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            border: 0;
+            background-color: white;
+            color: black;
+            box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-size: 15px;
+            transition: all 0.5s ease;
+        }
+
+        /* Define the styles for hover effect */
+        input[type="submit"]:hover {
+            letter-spacing: 3px;
+            background-color: #9B00EA;
+            color: hsl(0, 0%, 100%);
+            box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
+        }
+
+        /* Define the styles for active effect */
+        input[type="submit"]:active {
+            letter-spacing: 3px;
+            background-color: #9B00EA;
+            color: hsl(0, 0%, 100%);
+            box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
+            transform: translateY(10px);
+            transition: 100ms;
+        }
+
+        .btn-primary:hover {
+            background-color: white !important;
+            color: black !important;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+    </style>
 
 </head>
 
@@ -63,22 +102,25 @@ if (isset($_GET['bookid']) && isset($_SESSION['login'])) {
             <?php include('includes/check_verification.php'); ?>
             <div class="row pad-botm">
                 <div class="col-md-12">
-                    <h4 class="header-line">Borrow Book</h4>
+                    <h4 class="header-line" style="text-align: center; position: relative;"><i class="fa-solid fa-book-bookmark fa-beat"></i> Borrow Book</h4>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3 col-md-offset-1">
-                    <div class="panel panel-danger">
-                        <div class="panel-heading">
+                    <div class="panel panel-danger" style="border-radius: 10px; border-color: #9B00EA;">
+                        <div class="panel-heading" style="background-color: #9B00EA; color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px; text-align: center; font-weight: bold; border-color: #9B00EA;">
                             Borrow Book
                         </div>
-                        <div class="panel-body bg-warning">
+                        <div class="panel-body bg-warning" style="background-color: white; ">
                             <form role="form" method="post">
                                 <div class="form-group text-center">
                                     <label>Are you sure you want to borrow this book?</label>
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" name="issue" class="btn btn-danger">Yes</button> <a href="listed-books.php" class="btn btn-primary">No</a>
+                                    <input type="submit" name="issue" value="Yes"> 
+                                </div>
+                                <div class="text-center">
+                                <a href="listed-books.php" class="btn btn-primary" style="background-color: black; border-radius: 15px; margin-top: 20px; border-color: black; color: white;"><i class="fa-solid fa-arrow-left fa-beat-fade"></i> NO</a>
                                 </div>
                             </form>
                         </div>
@@ -101,7 +143,7 @@ if (isset($_GET['bookid']) && isset($_SESSION['login'])) {
                 ?>
                         <div class="col-md-8 col-sm-3">
                             <div class="panel panel-primary">
-                                <div class="panel-heading">
+                                <div class="panel-heading" style="text-align: center; font-weight: bold;">
                                     <?php echo htmlentities($result->BookName); ?>
                                 </div>
                                 <div class="panel-body text-center">

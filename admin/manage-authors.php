@@ -108,7 +108,7 @@ header('location:manage-authors.php');
                     <!-- Advanced Tables -->
                     <div class="panel panel-primary" style="border-color: #9B00EA;">
                         <div class="panel-heading" style="text-align: center; background-color: #9B00EA;">
-                           List of Authors
+                        <i class="fa-solid fa-feather"></i> List of Authors
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -133,12 +133,16 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {               ?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($cnt);?></td>
                                             <td class="center"><?php echo htmlentities($result->AuthorName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->creationDate);?></td>
-                                            <td class="center"><?php echo htmlentities($result->UpdationDate);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo date('d/m/Y h:i A', strtotime($result->creationDate));?></td>
                                             <td class="center" style="text-align: center;">
-
+                                            <?php 
+                                                if (!empty($result->UpdationDate)) {
+                                                    echo date('d/m/Y h:i A', strtotime($result->UpdationDate)); 
+                                                } 
+                                            ?></td>
+                                            <td class="center" style="text-align: center;">
                                             <a href="edit-author.php?athrid=<?php echo htmlentities($result->id);?>"><button class="btn btn-primary" style="background-color: black;"><i class="fa-solid fa-file-pen fa-bounce"></i> Edit</button> 
                                           <a href="manage-authors.php?del=<?php echo htmlentities($result->id);?>" onclick="return confirm('Are you sure you want to delete?');"" >  <button class="btn btn-danger"><i class="fa-solid fa-trash-can fa-bounce"></i> Delete</button>
                                             </td>

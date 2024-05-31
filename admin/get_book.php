@@ -1,46 +1,59 @@
 <?php 
 require_once("includes/config.php");
-if(!empty($_POST["bookid"])) {
-  $bookid=$_POST["bookid"];
- 
-    $sql ="SELECT distinct books.BookName,books.id,authors.AuthorName,books.bookImage,books.isIssued FROM books
-join authors on authors.id=books.AuthorId
-     WHERE (ISBNNumber=:bookid || BookName like '%$bookid%')";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':bookid', $bookid, PDO::PARAM_STR);
-$query-> execute();
-$results = $query -> fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query -> rowCount() > 0){
-?>
-<table border="1">
 
-  <tr>
-<?php foreach ($results as $result) {?>
-    <th style="padding-left:5%; width: 10%;">
-<img src="bookimg/<?php echo htmlentities($result->bookImage); ?>" width="120"><br />
-      <?php echo htmlentities($result->BookName); ?><br />
-    <?php echo htmlentities($result->AuthorName); ?><br />
-    <?php if($result->isIssued=='1'): ?>
-<p style="color:red;">Book has already been borrowed for now.</p>
-<?php else:?>
-<input type="radio" name="bookid" value="<?php echo htmlentities($result->id); ?>" required>
-<?php endif;?>
-  </th>
-    <?php  echo "<script>$('#submit').prop('disabled',false);</script>";
-}
-?>
-  </tr>
+if (!empty($_POST["bookid"])) {
+    $bookid = $_POST["bookid"];
+    
+    // Sanitize and validate input
+    function isValidInput($input) {
+        // Check for presence of HTML tags
+        if (preg_match('/<[^>]*>/', $input)) {
+            return false;
+        }
+        return true;
+    }
 
-</table>
-</div>
-</div>
+    if (!isValidInput($bookid)) {
+        echo "<span style='color: red;'>Invalid input</span>";
+        exit();
+    }
+  
 
-<?php  
-}else{?>
-<p>Record not found. Please try again.</p>
-<?php
- echo "<script>$('#submit').prop('disabled',true);</script>";
-}
+    // Sanitize input to prevent XSS
+    $bookid = htmlspecialchars($bookid, ENT_QUOTES, 'UTF-8');
+
+    $sql = "SELECT DISTINCT books.BookName, books.id, authors.AuthorName, books.bookImage, books.isIssued 
+            FROM books 
+            JOIN authors ON authors.id = books.AuthorId 
+            WHERE ISBNNumber = :bookid OR BookName LIKE :bookname";
+    $query = $dbh->prepare($sql);
+    $bookname_param = "%$bookid%";
+    $query->bindParam(':bookid', $bookid, PDO::PARAM_STR);
+    $query->bindParam(':bookname', $bookname_param, PDO::PARAM_STR);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+    if ($query->rowCount() > 0) {
+        echo '<table border="1">';
+        echo '<tr>';
+        foreach ($results as $result) {
+            echo '<th style="padding-left:5%; width: 10%;">';
+            echo '<img src="bookimg/' . htmlentities($result->bookImage) . '" width="120"><br />';
+            echo htmlentities($result->BookName) . '<br />';
+            echo htmlentities($result->AuthorName) . '<br />';
+            if ($result->isIssued == '1') {
+                echo '<p style="color:red;">Book has already been borrowed for now.</p>';
+            } else {
+                echo '<input type="radio" name="bookid" value="' . htmlentities($result->id) . '" required>';
+            }
+            echo '</th>';
+            echo "<script>$('#submit').prop('disabled', false);</script>";
+        }
+        echo '</tr>';
+        echo '</table>';
+    } else {
+        echo '<p>Record not found. Please try again.</p>';
+        echo "<script>$('#submit').prop('disabled', true);</script>";
+    }
 }
 ?>
