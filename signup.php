@@ -324,7 +324,7 @@ if (isset($_POST['signup'])) {
 
                 <div class="form-group">
                   <label><i class="fa fa-lock" style="margin-right: 5px;"></i> Confirm Password</label>
-                  <input class="form-control" type="password" name="confirmpassword" autocomplete="off" placeholder="Comfirm Password..." required value="<?php echo $confirmpassword; ?>" />
+                  <input class="form-control" type="password" name="confirmpassword" autocomplete="off" placeholder="Confirm Password..." required value="<?php echo $confirmpassword; ?>" />
                 </div>
                 <div class="capt">
                   <h2 type="text" id="mainCaptcha"></h2>

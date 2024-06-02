@@ -38,7 +38,7 @@ if (!empty($_POST["bookid"])) {
         echo '<tr>';
         foreach ($results as $result) {
             echo '<th style="padding-left:5%; width: 10%;">';
-            echo '<img src="bookimg/' . htmlentities($result->bookImage) . '" width="120"><br />';
+            echo '<img src="bookimage/' . htmlentities($result->bookImage) . '" width="120"><br />';
             echo htmlentities($result->BookName) . '<br />';
             echo htmlentities($result->AuthorName) . '<br />';
             if ($result->isIssued == '1') {
