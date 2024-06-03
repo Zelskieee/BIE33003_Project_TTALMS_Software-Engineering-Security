@@ -142,7 +142,7 @@ if(strlen($_SESSION['alogin'])==0) {
                                             <i class="fa-regular fa-image" style="margin-right: 5px;"></i><label>Book Image</label>
                                         </p>
                                         <p>
-                                            <img src="bookimg/<?php echo htmlentities($result->bookImage); ?>" width="100">
+                                            <img src="bookimage/<?php echo htmlentities($result->bookImage); ?>" width="100">
                                         </p>
                                     </div>
                                 </div>

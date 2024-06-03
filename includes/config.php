@@ -28,8 +28,8 @@ try {
 
 // email config
 define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_USERNAME', 'mukhtarsani20@gmail.com');
-define('SMTP_PASSWORD', 'mlauyqvhjnprxzfp');
+define('SMTP_USERNAME', 'epoojaproject@gmail.com');
+define('SMTP_PASSWORD', 'mtgpycdwkypjagva');
 define('SMTP_SECURE', 'tls');
 define('SMTP_PORT', 587);
 define('FROM_EMAIL', 'noreply@uthmlibrary.com');

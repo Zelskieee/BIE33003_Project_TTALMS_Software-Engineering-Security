@@ -65,7 +65,7 @@ function sendOTP($dbh)
             $mail->addReplyTo(FROM_EMAIL, 'TTALMS');
             $mail->isHTML(true);
             $mail->Subject = 'OTP for account verification';
-            $mail->Body = "Your OTP for account verification is: $otp";
+            $mail->Body = "Your OTP for account verification is <span style='font-weight: bold;'>$otp</span>";
             try {
                 if (!$mail->send()) {
                     echo "Mailer Error: " . $mail->ErrorInfo;

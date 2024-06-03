@@ -328,7 +328,7 @@ if (isset($_POST['signup'])) {
                 </div>
                 <div class="capt">
                   <h2 type="text" id="mainCaptcha"></h2>
-                  <p><button id="refresh" onclick="Captcha()" style="border-radius: 8px;"><i class="fa fa-refresh" style="margin-right: 5px;"></i></button></p>
+                  <p><button id="refresh" onclick="Captcha()" style="border-radius: 8px;"><i class="fa-solid fa-arrows-rotate fa-spin" style="margin-right: 5px;"></i></button></p>
                 </div>
 
                 <div class="form-group">

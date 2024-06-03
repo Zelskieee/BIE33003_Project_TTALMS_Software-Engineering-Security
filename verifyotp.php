@@ -3,7 +3,11 @@
 error_reporting(0);
 session_start();
 require 'includes/config.php';
+require 'vendor/autoload.php';
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 if (isset($_POST['submit'])) {
     verifyOTP($dbh);
@@ -19,14 +23,19 @@ function verifyOTP($dbh)
     $query->bindParam(':otp', $otp, PDO::PARAM_STR);
     $query->execute();
     $results = $query->fetchAll(PDO::FETCH_OBJ);
-    $cnt = 1;
     if ($query->rowCount() > 0) {
         $date = date('Y-m-d H:i:s');
         $otp = null;
         $verified = 1;
-        $sql = "UPDATE admin SET otp='$otp', verify_at='$date' WHERE UserName='$sid'";
+        $sql = "UPDATE admin SET otp=:otp, verify_at=:date WHERE UserName=:sid";
         $query = $dbh->prepare($sql);
+        $query->bindParam(':otp', $otp, PDO::PARAM_NULL);
+        $query->bindParam(':date', $date, PDO::PARAM_STR);
+        $query->bindParam(':sid', $sid, PDO::PARAM_STR);
         $query->execute();
+        
+        notifyLoginViaEmail($dbh); // Notify user via email after successful OTP verification
+
         echo "<script>alert('OTP verified successfully.');</script>";
         header('location:admin/dashboard.php');
     } else {
@@ -34,9 +43,44 @@ function verifyOTP($dbh)
     }
 }
 
-
-
+function notifyLoginViaEmail($dbh)
+{
+    $sid = $_SESSION['alogin'];
+    $sql = "SELECT * from admin where UserName=:sid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':sid', $sid, PDO::PARAM_STR);
+    $query->execute();
+    $results = $query->fetchAll(PDO::FETCH_OBJ);
+    if ($query->rowCount() > 0) {
+        foreach ($results as $result) {
+            $email = $result->EmailId;
+            $mail = new PHPMailer;
+            $mail->isSMTP();
+            $mail->Host = SMTP_HOST;
+            $mail->Port = SMTP_PORT;
+            $mail->SMTPSecure = SMTP_SECURE;
+            $mail->SMTPAuth = true;
+            $mail->SMTPDebug = false;
+            $mail->Username = SMTP_USERNAME;
+            $mail->Password = SMTP_PASSWORD;
+            $mail->setFrom(FROM_EMAIL, 'TTALMS');
+            $mail->addAddress($email);
+            $mail->Subject = 'Login Notification';
+            $mail->isHTML(true);
+            $mailContent = "<h1>TTALMS</h1><p>Your account has been logged in successfully.</p> <br> <p> Thank you for using our service.<br> Best regards, <span style='font-weight: bold;'>TTALMS</span></p>";
+            $mail->Body = $mailContent;
+            try {
+                if (!$mail->send()) {
+                    echo "<script>alert('Email could not be sent.');</script>";
+                }
+            } catch (Exception $e) {
+                echo "<script>alert('Email could not be sent.');</script>";
+            }
+        }
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -46,7 +90,7 @@ function verifyOTP($dbh)
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>TTALMS - Resend OTP</title>
-    <link rel="icon" type="image/x-icon" href="assets\img\icon_ttalms.ico">
+    <link rel="icon" type="image/x-icon" href="assets/img/icon_ttalms.ico">
     <!-- BOOTSTRAP CORE STYLE  -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME STYLE  -->
@@ -58,37 +102,58 @@ function verifyOTP($dbh)
     <!-- ICON -->
     <script src="https://kit.fontawesome.com/641ebcf430.js" crossorigin="anonymous"></script>
     <style>
+        .otp-input {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .otp-input input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .otp-input input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+        }
+
         input[type="submit"] {
-        padding: 17px 40px;
-        border-radius: 50px;
-        cursor: pointer;
-        border: 0;
-        background-color: white;
-        color: black;
-        box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
-        font-weight: bold;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        font-size: 15px;
-        transition: all 0.5s ease;
+            padding: 17px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            border: 0;
+            background-color: white;
+            color: black;
+            box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-size: 15px;
+            transition: all 0.5s ease;
         }
 
-        /* Define the styles for hover effect */
         input[type="submit"]:hover {
-        letter-spacing: 3px;
-        background-color: #9B00EA;
-        color: hsl(0, 0%, 100%);
-        box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
+            letter-spacing: 3px;
+            background-color: #9B00EA;
+            color: hsl(0, 0%, 100%);
+            box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
         }
 
-        /* Define the styles for active effect */
         input[type="submit"]:active {
-        letter-spacing: 3px;
-        background-color: #9B00EA;
-        color: hsl(0, 0%, 100%);
-        box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
-        transform: translateY(10px);
-        transition: 100ms;
+            letter-spacing: 3px;
+            background-color: #9B00EA;
+            color: hsl(0, 0%, 100%);
+            box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
+            transform: translateY(10px);
+            transition: 100ms;
         }
     </style>
 </head>
@@ -114,19 +179,19 @@ function verifyOTP($dbh)
                         <div class="panel-body">
                             <form role="form" method="post">
                                 <div class="form-group">
-
-                                    <label>OTP has been sent to your email. Please check your email.</label>
-                                    <!-- give the form to verify the otp here -->
-                                    <form role="form" method="post">
-                                        <div class="form-group ">
-                                            <label><i class="fa-solid fa-mobile"></i> OTP</label>
-                                            <input class="form-control" type="text" name="otp" autocomplete="off" required oninput="this.value = this.value.replace(/\D/g, '')" />
-                                        </div>
-                                            <input type="submit" name="submit" class="btn btn-primary" value="Verify OTP">
-                                    </form>
-
+                                    <label><i class="fa-solid fa-mobile"></i> OTP has been sent to your email. Please check your email.</label>
+                                    <div class="otp-input">
+                                        <input type="text" autocomplete="one-time-code" inputmode="numeric" name="otp1" maxlength="1" required>
+                                        <input type="text" autocomplete="one-time-code" inputmode="numeric" name="otp2" maxlength="1" required>
+                                        <input type="text" autocomplete="one-time-code" inputmode="numeric" name="otp3" maxlength="1" required>
+                                        <input type="text" autocomplete="one-time-code" inputmode="numeric" name="otp4" maxlength="1" required>
+                                        <input type="text" autocomplete="one-time-code" inputmode="numeric" name="otp5" maxlength="1" required>
+                                        <input type="text" autocomplete="one-time-code" inputmode="numeric" name="otp6" maxlength="1" required>
+                                    </div>
+                                    <input type="hidden" name="otp" id="otp">
+                                    <input type="submit" name="submit" class="btn btn-primary" value="Verify OTP">
                                 </div>
-                                <a href="resend-otp.php" class="btn btn-secondary" style="color: black; font-weight: bold; text-decoration: none;" onmouseover="this.style.color='grey'; this.style.fontWeight='normal';" onmouseout="this.style.color='black'; this.style.fontWeight='bold';">Resend OTP</a>
+                                <i class="fa-solid fa-rotate-right fa-spin"></i><a href="resend-otp.php" class="btn btn-secondary" style="color: black; font-weight: bold; text-decoration: none;" onmouseover="this.style.color='grey'; this.style.fontWeight='normal';" onmouseout="this.style.color='black'; this.style.fontWeight='bold';">Resend OTP</a>
                             </form>
                         </div>
                     </div>
@@ -144,4 +209,37 @@ function verifyOTP($dbh)
     <script src="assets/js/bootstrap.js"></script>
     <!-- CUSTOM SCRIPTS  -->
     <script src="assets/js/custom.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const inputs = document.querySelectorAll(".otp-input input");
+            const otpHiddenInput = document.getElementById("otp");
+            const otpForm = document.querySelector("form");
+
+            inputs.forEach((input, index) => {
+                input.addEventListener("input", (e) => {
+                    if (/[^0-9]/.test(e.target.value)) {
+                        e.target.value = "";
+                    } else if (input.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Backspace" && input.value === "" && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+
+            otpForm.addEventListener("submit", (e) => {
+                let otp = "";
+                inputs.forEach(input => {
+                    otp += input.value;
+                });
+                otpHiddenInput.value = otp;
+            });
+        });
+    </script>
 </body>
+</html>

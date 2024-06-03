@@ -133,15 +133,15 @@ foreach($results as $result)
                                                 if (!empty($result->ReturnDate)) {
                                                     echo date('d/m/Y h:i A', strtotime($result->ReturnDate));
                                                 } else {
-                                                    echo '<span style="color: red; font-weight: bold;">Not Return Yet</span>';
+                                                    echo "<span style='color: red; font-weight: bold;'>Not Returned Yet</span>";
                                                 }
                                                 ?>
                                             </td>
                                             <td class="center" style="text-align: center;">
                                                 <?php if (!empty($result->ReturnDate)) { ?>
-                                                    <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary" style="background-color: white; border-color: black; color: black;"><i class="fa-solid fa-eye fa-bounce"></i> View</button></a>
+                                                    <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary" style="background-color: white; border-color: black; color: black; transition: color 0.5s, background-color 0.5s;" onmouseover="this.style.backgroundColor='black'; this.style.color='white';" onmouseout="this.style.backgroundColor='white'; this.style.color='black';"><i class="fa-solid fa-eye fa-bounce"></i> View</button></a>
                                                 <?php } else { ?>
-                                                    <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary" style="background-color: black;"><i class="fa-solid fa-arrow-rotate-left fa-bounce"></i> Return</button></a>
+                                                    <a href="update-issue-bookdeails.php?rid=<?php echo htmlentities($result->rid);?>"><button class="btn btn-primary" style="background-color: black; border-color: black; color: white; transition: color 0.5s, background-color 0.5s;" onmouseover="this.style.backgroundColor='white'; this.style.color='black';" onmouseout="this.style.backgroundColor='black'; this.style.color='white';"><i class="fa-solid fa-arrow-rotate-left fa-bounce"></i> Return</button></a>
                                                 <?php } ?>
                                             </td>
 

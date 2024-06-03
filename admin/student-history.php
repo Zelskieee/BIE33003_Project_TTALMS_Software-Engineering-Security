@@ -80,7 +80,7 @@ header('location:reg-students.php');
                     <div class="panel panel-primary" style="border-color: #9B00EA;">
                         <div class="panel-heading" style="text-align: center; background-color: #9B00EA;">
 
-<?php echo $sid;?> History Details
+                        <i class="fa-solid fa-circle-info"></i> <?php echo $sid;?> History Details
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">

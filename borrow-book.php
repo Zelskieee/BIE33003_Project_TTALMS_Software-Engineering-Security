@@ -1,33 +1,99 @@
 <?php
 session_start();
 require 'includes/config.php';
+require 'vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 if (isset($_GET['bookid']) && isset($_SESSION['login'])) {
     if (isset($_POST['issue'])) {
         $bookid = $_GET['bookid'];
         $studentid = $_SESSION['login'];
         $isissued = 1;
-        $sql = "INSERT INTO issuedbookdetails(StudentID, BookId) VALUES(:studentid, :bookid);
-                UPDATE books SET isIssued = :isissued WHERE id = :bookid;";
-        $query = $dbh->prepare($sql);
-        $query->bindParam(':studentid', $studentid, PDO::PARAM_STR);
-        $query->bindParam(':bookid', $bookid, PDO::PARAM_STR);
-        $query->bindParam(':isissued', $isissued, PDO::PARAM_STR);
-        $query->execute();
-        $lastInsertId = $dbh->lastInsertId();
-        if ($lastInsertId) {
+
+        // Start transaction
+        $dbh->beginTransaction();
+
+        try {
+            // Insert issued book details
+            $sql1 = "INSERT INTO issuedbookdetails (StudentID, BookId) VALUES (:studentid, :bookid)";
+            $query1 = $dbh->prepare($sql1);
+            $query1->bindParam(':studentid', $studentid, PDO::PARAM_STR);
+            $query1->bindParam(':bookid', $bookid, PDO::PARAM_STR);
+            $query1->execute();
+
+            // Close cursor to free the connection for the next query
+            $query1->closeCursor();
+
+            // Update book status
+            $sql2 = "UPDATE books SET isIssued = :isissued WHERE id = :bookid";
+            $query2 = $dbh->prepare($sql2);
+            $query2->bindParam(':isissued', $isissued, PDO::PARAM_INT);
+            $query2->bindParam(':bookid', $bookid, PDO::PARAM_STR);
+            $query2->execute();
+
+            // Commit transaction
+            $dbh->commit();
+
             $_SESSION['msg'] = "Book issued successfully";
+            notifyLoginViaEmail($dbh, $studentid);
             header('location:issued-books.php');
-        } else {
+            exit();
+        } catch (Exception $e) {
+            // Rollback transaction
+            $dbh->rollBack();
+
             $_SESSION['error'] = "Something went wrong. Please try again";
             header('location:manage-issued-books.php');
+            exit();
         }
     }
 } else {
     $_SESSION['error'] = "Please login to borrow a book";
     header('location:index.php');
+    exit();
+}
+
+function notifyLoginViaEmail($dbh, $studentid)
+{
+    $sql = "SELECT EmailId FROM students WHERE matricNo = :sid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':sid', $studentid, PDO::PARAM_STR);
+    $query->execute();
+    $result = $query->fetch(PDO::FETCH_OBJ);
+
+    // Close cursor to free the connection
+    $query->closeCursor();
+
+    if ($result) {
+        $email = $result->EmailId;
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host = SMTP_HOST;
+            $mail->Port = SMTP_PORT;
+            $mail->SMTPSecure = SMTP_SECURE;
+            $mail->SMTPAuth = true;
+            $mail->Username = SMTP_USERNAME;
+            $mail->Password = SMTP_PASSWORD;
+            $mail->setFrom(FROM_EMAIL, 'TTALMS');
+            $mail->addAddress($email);
+            $mail->Subject = 'Borrow Book Notification';
+            $mail->isHTML(true);
+            $mailContent = "<h1>TTALMS</h1><p>The book borrowing process was completed successfully.</p><br><p>Thank you for using our service.<br>Best regards,<br><strong>TTALMS</strong></p>";
+            $mail->Body = $mailContent;
+            $mail->send();
+        } catch (Exception $e) {
+            // Log the error message
+            error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        }
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -240,7 +306,7 @@ if (isset($_GET['bookid']) && isset($_SESSION['login'])) {
             cursor: pointer;
             padding: 6px;
             color: #fff;
-            background-color: #D896FA;
+            background-color: #9B00EA;
             font-size: 14px;
             border-radius: 50px;
         }
@@ -669,9 +735,9 @@ if (isset($_GET['bookid']) && isset($_SESSION['login'])) {
     <div id="captchaModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background-color: #D896FA; border-radius: 6px 6px 0px 0px;">
-                    <h5 class="modal-title" style="font-weight: bold;">Security Verification<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                <div class="modal-header" style="background-color: #9B00EA; border-radius: 6px 6px 0px 0px;">
+                    <h5 class="modal-title" style="font-weight: bold; color: white;">Security Verification<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fa-solid fa-xmark fa-beat"></i></span>
                     </button></h5>
                 </div>
                 <div class="modal-body">

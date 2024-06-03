@@ -69,7 +69,7 @@ if (strlen($_SESSION['login']) == 0) {
                             <!-- Advanced Tables -->
                             <div class="panel panel-default" style="margin-top: 50px; border-radius: 10px; border-color: #9B00EA;">
                                 <div class="panel-heading" style="background-color: #9B00EA; color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px; text-align: center; font-weight: bold; border-color: #9B00EA;">
-                                    List of Books
+                                <i class="fa-solid fa-book"></i> List of Books
                                 </div>
                                 <div class="panel-body">
 

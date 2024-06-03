@@ -106,12 +106,19 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {               ?>                                      
                                         <tr class="odd gradeX">
-                                            <td class="center"><?php echo htmlentities($cnt);?></td>
-                                            <td class="center"><?php echo htmlentities($result->matricNo);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($cnt);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->matricNo);?></td>
                                             <td class="center"><?php echo htmlentities($result->FullName);?></td>
-                                            <td class="center"><?php echo htmlentities($result->EmailId);?></td>
-                                            <td class="center"><?php echo htmlentities($result->MobileNumber);?></td>
-                                            <td class="center"><?php echo htmlentities($result->RegDate);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->EmailId);?></td>
+                                            <td class="center" style="text-align: center;"><?php echo htmlentities($result->MobileNumber);?></td>
+                                            <td class="center" style="text-align: center;">
+                                                <?php
+                                                $originalDate = $result->RegDate;
+                                                $dateTime = new DateTime($originalDate);
+                                                $formattedDate = $dateTime->format('d/m/Y h:i A');
+                                                echo htmlentities($formattedDate);
+                                                ?>
+                                            </td>
                                             <td class="center" style="text-align: center;"><?php if($result->Status==1)
                                             {
                                                 echo '<span style="color: green; font-weight: bold;">' . htmlentities("Active") . '</span>';
