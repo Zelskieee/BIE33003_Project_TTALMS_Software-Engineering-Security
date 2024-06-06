@@ -238,6 +238,9 @@ if (isset($_POST['login'])) {
                 <img src="assets/img/7.png" alt="" />
               </div>
               <div class="item">
+                <img src="assets/img/17.png" alt="" />
+              </div>
+              <div class="item">
                 <img src="assets/img/1.png" alt="" />
               </div>
               <div class="item">
@@ -247,7 +250,13 @@ if (isset($_POST['login'])) {
                 <img src="assets/img/4.png" alt="" />
               </div>
               <div class="item">
+                <img src="assets/img/19.png" alt="" />
+              </div>
+              <div class="item">
                 <img src="assets/img/5.png" alt="" />
+              </div>
+              <div class="item">
+                <img src="assets/img/18.png" alt="" />
               </div>
               <div class="item">
                 <img src="assets/img/6.png" alt="" />
