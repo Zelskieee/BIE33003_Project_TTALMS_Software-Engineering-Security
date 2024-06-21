@@ -28,8 +28,8 @@ try {
 
 // email config
 define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_USERNAME', 'epoojaproject@gmail.com');
-define('SMTP_PASSWORD', 'mtgpycdwkypjagva');
+define('SMTP_USERNAME', 'musictimessystem@gmail.com');
+define('SMTP_PASSWORD', 'kppuqpaokzlwtcww');
 define('SMTP_SECURE', 'tls');
 define('SMTP_PORT', 587);
 define('FROM_EMAIL', 'noreply@uthmlibrary.com');
